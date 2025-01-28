@@ -6,6 +6,7 @@ pandas==1.5.3
 scikit-learn==1.2.2
 h5py==3.12.1
 joblib==1.4.2
-opencensus-ext-azure
-streamlit==1.25.0
-requests
+opencensus-ext-azure==1.1.14
+streamlit==1.24.0  # Version légèrement inférieure pour éviter conflit
+protobuf==3.20.3   # Version compatible avec TensorFlow et Streamlit
+requests==2.32.3
