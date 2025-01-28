@@ -16,15 +16,15 @@ except Exception as e:
 
 # Charger le modèle et le tokenizer
 try:
-    model = tf.keras.models.load_model("model_lstm_v2.keras")
-    logger.info("Modèle chargé avec succès.")
+    model = tf.keras.models.load_model("lstm_model.keras")
+    logger.info("Modèle 'lstm_model.keras' chargé avec succès.")
 except Exception as e:
     logger.error(f"Erreur lors du chargement du modèle : {e}")
     model = None
 
 try:
     tokenizer = joblib.load("tokenizer.pkl")
-    logger.info("Tokenizer chargé avec succès.")
+    logger.info("Tokenizer 'tokenizer.pkl' chargé avec succès.")
 except Exception as e:
     logger.error(f"Erreur lors du chargement du tokenizer : {e}")
     tokenizer = None
@@ -49,7 +49,7 @@ def predict():
         # Récupérer les tweets à analyser
         data = request.json
         if "tweets" not in data:
-            return jsonify({"error": "Le champ 'tweets' est manquant"}), 400
+            return jsonify({"error": "Le champ 'tweets' est manquant."}), 400
 
         tweets = data["tweets"]
         if not isinstance(tweets, list):
@@ -88,4 +88,5 @@ def predict():
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0", port=5000)
+
 
