@@ -4,6 +4,10 @@ import joblib
 import logging
 from datetime import datetime, timedelta
 from opencensus.ext.azure.log_exporter import AzureLogHandler
+<<<<<<< HEAD
+=======
+import os
+>>>>>>> d644f52f10cf13f30cb32ced7a7a33c2f5603892
 
 # Configurer Azure Application Insights Logging
 try:
@@ -13,6 +17,15 @@ try:
     logger.info("Azure Application Insights Logging configuré avec succès.")
 except Exception as e:
     print(f"Erreur lors de la configuration d'Azure Application Insights Logging : {e}")
+<<<<<<< HEAD
+=======
+
+# Vérifier si les fichiers nécessaires existent
+if not os.path.exists("lstm_model.keras"):
+    logger.error("Le fichier lstm_model.keras est introuvable !")
+if not os.path.exists("tokenizer.pkl"):
+    logger.error("Le fichier tokenizer.pkl est introuvable !")
+>>>>>>> d644f52f10cf13f30cb32ced7a7a33c2f5603892
 
 # Charger le modèle et le tokenizer
 try:
@@ -44,15 +57,21 @@ def predict():
     try:
         # Vérifier si le modèle et le tokenizer sont chargés
         if model is None or tokenizer is None:
+            logger.error("Le modèle ou le tokenizer n'est pas correctement chargé.")
             return jsonify({"error": "Le modèle ou le tokenizer n'est pas correctement chargé."}), 500
 
         # Récupérer les tweets à analyser
         data = request.json
         if "tweets" not in data:
+<<<<<<< HEAD
+=======
+            logger.error("Le champ 'tweets' est manquant dans les données fournies.")
+>>>>>>> d644f52f10cf13f30cb32ced7a7a33c2f5603892
             return jsonify({"error": "Le champ 'tweets' est manquant."}), 400
 
         tweets = data["tweets"]
         if not isinstance(tweets, list):
+            logger.error("Le champ 'tweets' doit être une liste.")
             return jsonify({"error": "Le champ 'tweets' doit être une liste."}), 400
 
         # Prétraitement des tweets
@@ -87,4 +106,7 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
+    logger.info("Application Flask en cours d'exécution...")
     app.run(debug=False, host="0.0.0.0", port=5000)
+
+
