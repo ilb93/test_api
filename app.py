@@ -2,30 +2,31 @@ from flask import Flask, request, jsonify
 import tensorflow as tf
 import joblib
 import logging
-from google.cloud import logging as cloud_logging
 from datetime import datetime, timedelta
+from opencensus.ext.azure.log_exporter import AzureLogHandler
 
-# Configurer Google Cloud Logging
+# Configurer Azure Application Insights Logging
 try:
-    cloud_client = cloud_logging.Client()
-    cloud_client.setup_logging()
-    logging.info("Google Cloud Logging configuré avec succès.")
+    logger = logging.getLogger(__name__)
+    logger.addHandler(AzureLogHandler(connection_string="InstrumentationKey=47019b65-b8ca-40be-95c8-a0552c3b62b3"))
+    logger.setLevel(logging.INFO)
+    logger.info("Azure Application Insights Logging configuré avec succès.")
 except Exception as e:
-    logging.error(f"Erreur lors de la configuration de Google Cloud Logging : {e}")
+    print(f"Erreur lors de la configuration d'Azure Application Insights Logging : {e}")
 
 # Charger le modèle et le tokenizer
 try:
-    model = tf.keras.models.load_model("model_lstm_v2.keras")
-    logging.info("Modèle chargé avec succès.")
+    model = tf.keras.models.load_model("lstm_model.keras")
+    logger.info("Modèle 'lstm_model.keras' chargé avec succès.")
 except Exception as e:
-    logging.error(f"Erreur lors du chargement du modèle : {e}")
+    logger.error(f"Erreur lors du chargement du modèle : {e}")
     model = None
 
 try:
     tokenizer = joblib.load("tokenizer.pkl")
-    logging.info("Tokenizer chargé avec succès.")
+    logger.info("Tokenizer 'tokenizer.pkl' chargé avec succès.")
 except Exception as e:
-    logging.error(f"Erreur lors du chargement du tokenizer : {e}")
+    logger.error(f"Erreur lors du chargement du tokenizer : {e}")
     tokenizer = None
 
 # Initialiser l'application Flask
@@ -48,7 +49,7 @@ def predict():
         # Récupérer les tweets à analyser
         data = request.json
         if "tweets" not in data:
-            return jsonify({"error": "Le champ 'tweets' est manquant"}), 400
+            return jsonify({"error": "Le champ 'tweets' est manquant."}), 400
 
         tweets = data["tweets"]
         if not isinstance(tweets, list):
@@ -70,19 +71,19 @@ def predict():
             # Si le tweet est négatif, l'ajouter à la liste
             if sentiment == "négatif":
                 negative_tweets.append({"timestamp": now, "tweet": tweet})
-                logging.info(f"Tweet négatif détecté : {tweet}")
+                logger.info(f"Tweet négatif détecté : {tweet}")
 
         # Supprimer les anciens tweets négatifs (plus de 5 minutes)
         negative_tweets[:] = [t for t in negative_tweets if t["timestamp"] > now - timedelta(minutes=5)]
 
         # Si plus de 3 tweets négatifs, loguer une alerte
         if len(negative_tweets) > 3:
-            logging.warning(f"ALERTE : Plus de 3 tweets négatifs détectés en 5 minutes. Détails : {negative_tweets}")
+            logger.warning(f"ALERTE : Plus de 3 tweets négatifs détectés en 5 minutes. Détails : {negative_tweets}")
 
         return jsonify({"predictions": results})
 
     except Exception as e:
-        logging.error(f"Erreur lors de la prédiction : {e}")
+        logger.error(f"Erreur lors de la prédiction : {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
