@@ -10,3 +10,4 @@ opencensus-ext-azure
 streamlit==1.25.0
 requests
 pandas
+protobuf==3.20.3
