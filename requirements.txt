@@ -7,4 +7,3 @@ scikit-learn==1.2.2
 h5py==3.12.1
 joblib==1.4.2
 opencensus-ext-azure
-opencensus-ext-azure
