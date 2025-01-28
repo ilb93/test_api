@@ -8,3 +8,5 @@ h5py==3.12.1
 joblib==1.4.2
 opencensus-ext-azure
 streamlit==1.25.0
+requests
+pandas
