@@ -1,0 +1,3 @@
+touch .heroku-repo
+git add .heroku-repo
+git commit -m "Ajout de .heroku-repo pour ignorer le cache"
