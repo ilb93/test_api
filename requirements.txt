@@ -6,8 +6,5 @@ pandas==1.5.3
 scikit-learn==1.2.2
 h5py==3.12.1
 joblib==1.4.2
-<<<<<<< HEAD
 opencensus-ext-azure
-=======
 opencensus-ext-azure
->>>>>>> d644f52f10cf13f30cb32ced7a7a33c2f5603892
