@@ -1,23 +1,16 @@
 name: CI - Tests API Flask
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout du repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Installer Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
@@ -26,5 +19,8 @@ jobs:
           pip install -r requirements.txt
           pip install pytest requests
 
+      - name: Vérifier la présence des fichiers
+        run: ls -la
+
       - name: Lancer les tests
-        run: pytest test_api.py
+        run: pytest tests/test_api.py
