@@ -69,14 +69,13 @@ def predict():
 
         # Vérifier les données d'entrée
         data = request.json
-        if "tweets" not in data or "expected_labels" not in data:
-            logger.error("❌ Les champs 'tweets' et 'expected_labels' sont requis.")
-            return jsonify({"error": "Les champs 'tweets' et 'expected_labels' sont requis."}), 400
+        if "tweets" not in data:
+            logger.error("❌ Le champ 'tweets' est requis.")
+            return jsonify({"error": "Le champ 'tweets' est requis."}), 400
 
         tweets = data["tweets"]
-        expected_labels = data["expected_labels"]
 
-        if not isinstance(tweets, list) or not isinstance(expected_labels, list) or len(tweets) != len(expected_labels):
+        if not isinstance(tweets, list):
             logger.error("❌ Les données fournies ne sont pas valides.")
             return jsonify({"error": "Les données fournies ne sont pas valides."}), 400
 
@@ -94,17 +93,24 @@ def predict():
         detected_errors = []  # Stocke uniquement les erreurs pour ce batch
 
         # ------------------------------
-        # 🔹 VÉRIFICATION DES ERREURS DE PRÉDICTION
+        # 🔹 TEST DES PRÉDICTIONS
         # ------------------------------
-        for tweet, prediction, expected_label in zip(tweets, predictions, expected_labels):
-            sentiment = "positif" if prediction == 1 else "négatif"
-            expected_sentiment = "positif" if expected_label == 1 else "négatif"
-            results.append({"tweet": tweet, "prediction": sentiment, "expected": expected_sentiment})
+        expected_labels = data.get("expected_labels")  # Peut être None
 
-            # Vérifier si la prédiction est incorrecte
-            if sentiment != expected_sentiment:
-                detected_errors.append({"timestamp": now, "tweet": tweet, "prediction": sentiment, "expected": expected_sentiment})
-                logger.warning(f"⚠️ TWEET MAL PREDIT : tweet='{tweet}', prediction='{sentiment}', attendu='{expected_sentiment}'")
+        for i, (tweet, prediction) in enumerate(zip(tweets, predictions)):
+            sentiment = "positif" if prediction == 1 else "négatif"
+            result = {"tweet": tweet, "prediction": sentiment}
+
+            if expected_labels and len(expected_labels) == len(tweets):
+                expected_sentiment = "positif" if expected_labels[i] == 1 else "négatif"
+                result["expected"] = expected_sentiment
+
+                # Vérifier si la prédiction est incorrecte
+                if sentiment != expected_sentiment:
+                    detected_errors.append({"timestamp": now, "tweet": tweet, "prediction": sentiment, "expected": expected_sentiment})
+                    logger.warning(f"⚠️ TWEET MAL PREDIT : tweet='{tweet}', prediction='{sentiment}', attendu='{expected_sentiment}'")
+
+            results.append(result)
 
         # Ajouter les erreurs détectées à la liste globale
         misclassified_predictions.extend(detected_errors)
