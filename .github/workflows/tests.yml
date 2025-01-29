@@ -19,8 +19,14 @@ jobs:
           pip install -r requirements.txt
           pip install pytest requests
 
-      - name: Vérifier la présence des fichiers
-        run: ls -la
+      - name: Démarrer l'API Flask en arrière-plan
+        run: |
+          python app.py &
+        env:
+          FLASK_ENV: testing
+
+      - name: Attendre que l'API démarre
+        run: sleep 5  # Attente de 5 secondes pour que l'API démarre
 
       - name: Lancer les tests
         run: pytest tests/test_api.py
