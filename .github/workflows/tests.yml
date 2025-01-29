@@ -21,12 +21,20 @@ jobs:
 
       - name: Démarrer l'API Flask en arrière-plan
         run: |
-          python app.py &
+          nohup python app.py > api.log 2>&1 &
         env:
           FLASK_ENV: testing
 
       - name: Attendre que l'API démarre
-        run: sleep 5  # Attente de 5 secondes pour que l'API démarre
+        run: sleep 10  # Attente de 10 secondes pour être sûr que l'API est bien lancée
+
+      - name: Vérifier si l'API tourne
+        run: |
+          if ! curl -s http://127.0.0.1:5000/health; then
+            echo "L'API ne tourne pas. Logs de l'API :"
+            cat api.log
+            exit 1
+          fi
 
       - name: Lancer les tests
         run: pytest tests/test_api.py

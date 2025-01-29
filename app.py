@@ -59,6 +59,10 @@ misclassified_predictions = []
 def home():
     return jsonify({"message": "Bienvenue sur l'API de prédiction de sentiments !"})
 
+@app.route("/health")
+def health():
+    return jsonify({"status": "running"})
+
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
@@ -69,15 +73,15 @@ def predict():
 
         # Vérifier les données d'entrée
         data = request.json
-        if "tweets" not in data:
+        if not data or "tweets" not in data:
             logger.error("❌ Le champ 'tweets' est requis.")
             return jsonify({"error": "Le champ 'tweets' est requis."}), 400
 
         tweets = data["tweets"]
 
-        if not isinstance(tweets, list):
+        if not isinstance(tweets, list) or not all(isinstance(t, str) for t in tweets):
             logger.error("❌ Les données fournies ne sont pas valides.")
-            return jsonify({"error": "Les données fournies ne sont pas valides."}), 400
+            return jsonify({"error": "Les données fournies doivent être une liste de textes."}), 400
 
         # ------------------------------
         # 🔹 PRÉTRAITEMENT DES TWEETS
@@ -130,12 +134,6 @@ def predict():
         logger.error(f"❌ Erreur lors de la prédiction : {e}")
         return jsonify({"error": str(e)}), 500
 
-
 if __name__ == "__main__":
     logger.info("🚀 Application Flask en cours d'exécution...")
-<<<<<<< Updated upstream
     app.run(debug=False, host="0.0.0.0", port=5000)
-
-=======
-    app.run(debug=False, host="0.0.0.0", port=5000)
->>>>>>> Stashed changes
