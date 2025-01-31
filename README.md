@@ -4,7 +4,7 @@
 Ce projet vise à **prédire le sentiment d'un tweet** (positif ou négatif) en utilisant différentes approches d'apprentissage automatique et de deep learning.  
 
 L'API déployée sur **Heroku** permet d'envoyer un tweet en entrée et de recevoir une prédiction de sentiment en sortie.  
-Le suivi des performances et le monitoring sont effectués grâce à **MLFlow** et **Azure Application Insights**.
+Le suivi des performances et le monitoring sont effectués grâce à **MLFlow** et **Azure Application Insights**.....
 
 ---
 
