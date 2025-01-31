@@ -37,8 +37,8 @@ Ce projet vise à prédire le sentiment associé à un tweet (positif ou négati
 ## 🛠 Installation et Exécution
 ### 1️⃣ Cloner le Repository
 ```bash
-git clone https://github.com/ton-repo/mlops-tweet-analysis.git
-cd mlops-tweet-analysis
+git clone https://github.com/ilb93/test_api.git
+cd test_api
 ```
 
 ### 2️⃣ Installer les Dépendances
