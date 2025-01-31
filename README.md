@@ -72,9 +72,9 @@ streamlit run streamlit_app.py
 ```
 
 ## 🔗 Liens Utiles
-- **API en production** : [Lien Heroku](https://nom-du-projet.herokuapp.com)
-- **MLFlow Tracking** : [Lien MLFlow](http://localhost:5000)
-- **Dépôt GitHub** : [Lien vers GitHub](https://github.com/ton-repo/mlops-tweet-analysis)
+- **API en production** : [Lien Heroku](https://news-app-azure-47b93008885f.herokuapp.com/)
+- **MLFlow Tracking** : [Lien MLFlow](http://localhost:5002)
+- **Dépôt GitHub** : [Lien vers GitHub](https://github.com/ilb93/test_api.git)
 - **Azure Application Insights** : Configuration et logs visibles dans Azure Portal
 
 ## ✨ Auteurs
